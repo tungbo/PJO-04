@@ -1,14 +1,12 @@
-import pg from "pg";
-const { Pool } = pg;
+const { Pool } = require("pg");
 
 const pool = new Pool({
-  user: "postgres",
   host: "localhost",
   database: "pizzaDb",
-  password: "admin123",
   port: 5432,
+  user: "postgres",
+  password: "admin123",
 });
-
 const checkConnection = async () => {
   try {
     const client = await pool.connect();
@@ -33,4 +31,4 @@ const runQuery = async (query, params) => {
 
 checkConnection();
 
-export default runQuery;
+module.exports = runQuery;
