@@ -7,6 +7,8 @@ const roleRoutes = require("./routes/roleRoutes");
 const userRoutes = require("./routes/userRoutes");
 const authRoutes = require("./routes/authRoutes");
 const cartRoutes = require("./routes/cartRoutes");
+const checkoutRoutes = require("./routes/checkoutRoutes");
+
 const app = express();
 const port = 3000;
 
@@ -20,7 +22,8 @@ app.use(
   roleRoutes,
   userRoutes,
   authRoutes,
-  cartRoutes
+  cartRoutes,
+  checkoutRoutes
 );
 
 app.listen(port, () => {
