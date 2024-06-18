@@ -1,5 +1,6 @@
 const express = require("express");
 const bodyParser = require("body-parser");
+const cors = require("cors");
 const { auth, authorize } = require("./middleware/auth");
 const pizzaRoutes = require("./routes/pizzaRoutes");
 const sizeRoutes = require("./routes/pizzaSizeRoutes");
@@ -13,6 +14,15 @@ const orderRoutes = require("./routes/orderRoutes");
 
 const app = express();
 const port = 3000;
+
+const corsOptions = {
+  origin: "http://uiouio", // frontend
+  methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+  credentials: true, // cookie,HTTP Authentication
+  optionsSuccessStatus: 204,
+};
+
+app.use(cors(corsOptions));
 
 app.use(bodyParser.json());
 // Yeu cau quyen, login test
