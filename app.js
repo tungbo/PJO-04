@@ -16,7 +16,7 @@ const app = express();
 const port = 3000;
 
 const corsOptions = {
-  origin: "http://uiouio", // frontend
+  origin: "http://localhost", // frontend
   methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
   credentials: true, // cookie,HTTP Authentication
   optionsSuccessStatus: 204,
