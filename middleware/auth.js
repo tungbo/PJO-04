@@ -1,10 +1,13 @@
 const jwt = require("jsonwebtoken");
-const auth = (req, res, next) => {
-  const token = req.header("Authorization").replace("Bearer ", "");
 
-  if (!token) {
-    return res.status(401).json({ message: "No token, authorization denied" });
+const auth = (req, res, next) => {
+  const authorizationHeader = req.headers.authorization;
+
+  if (!authorizationHeader) {
+    return res.status(401).json({ message: "You are not logged in" });
   }
+
+  const token = authorizationHeader;
 
   try {
     const decoded = jwt.verify(
@@ -17,5 +20,17 @@ const auth = (req, res, next) => {
     res.status(401).json({ message: "Token is not valid" });
   }
 };
-
-module.exports = auth;
+const authorize = (roles) => {
+  return (req, res, next) => {
+    if (!roles.includes(req.user.role)) {
+      return res
+        .status(403)
+        .json({ message: "Access forbidden: insufficient permissions" });
+    }
+    next();
+  };
+};
+module.exports = {
+  auth,
+  authorize,
+};

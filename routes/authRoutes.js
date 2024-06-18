@@ -1,8 +1,6 @@
 const express = require("express");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const auth = require("../middleware/auth");
-const authorize = require("../middleware/authorize");
 const { register } = require("../controllers/authController");
 const { getUserByUsername } = require("../controllers/userController");
 
@@ -11,6 +9,10 @@ const router = express.Router();
 router.post("/register", async (req, res) => {
   const { UserName, Password, address, phone, Name } = req.body;
   try {
+    const oldUser = await getUserByUsername(UserName);
+    if (oldUser) {
+      return res.status(400).json({ message: "Invalid credentials" });
+    }
     // Create the user
     const user = await register({
       UserName,
@@ -23,14 +25,19 @@ router.post("/register", async (req, res) => {
 
     // Generate JWT token
     const token = jwt.sign(
-      { id: user.idAccount },
+      { id: user.idAccount, role: user.role },
       "ai-yeu-bac-ho-chi-minh-bang-cac-em-nhi-dong",
       {
         expiresIn: "1h",
       }
     );
-
-    res.status(201).json({ token });
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: true,
+      sameSite: "Strict",
+      maxAge: 3600000, // 1 hour
+    });
+    res.json({ message: "Register in successfully" });
   } catch (error) {
     res.status(500).json({ message: "Server error" });
   }
@@ -53,14 +60,19 @@ router.post("/login", async (req, res) => {
 
     // Generate JWT token
     const token = jwt.sign(
-      { id: user.idAccount },
+      { id: user.idAccount, role: user.role },
       "ai-yeu-bac-ho-chi-minh-bang-cac-em-nhi-dong",
       {
         expiresIn: "1h",
       }
     );
 
-    res.status(200).json({ token });
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: true,
+      sameSite: "Strict",
+    });
+    res.json({ message: "Logged in successfully" });
   } catch (error) {
     res.status(500).json({ message: "Server error" });
   }

@@ -19,16 +19,17 @@ const createOrderDetail = async (orderDetail) => {
   return res.rows[0];
 };
 
-const getOrderDetailsByOrderId = async (idOrderPiza) => {
-  const query = `
-      SELECT * FROM "OrderDetail" WHERE "idOrderPiza" = $1;
-    `;
-  const res = await runQuery(query, [idOrderPiza]);
+const getOrderByIdAccount = async (idAccount) => {
+  const query = `SELECT "orderDate", "namePiza", "quantity", "DesTopping", "totalOrderPiza", "idAccount" FROM "OrderDetail"
+                JOIN "OrderPiza" ON "OrderPiza"."idOrderPiza" = "OrderDetail"."idOrderPiza"
+	              JOIN "Piza" ON "Piza"."idPiza" = "OrderDetail"."idPiza"
+	              WHERE "idAccount" = $1`;
+  const res = await runQuery(query, [idAccount]);
   return res.rows;
 };
 
 module.exports = {
   createOrder,
   createOrderDetail,
-  getOrderDetailsByOrderId,
+  getOrderByIdAccount,
 };

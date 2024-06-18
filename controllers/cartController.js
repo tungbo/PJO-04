@@ -1,3 +1,4 @@
+const { query } = require("express");
 const runQuery = require("../server");
 
 const createCart = async (cart) => {
@@ -30,9 +31,17 @@ const deleteCart = async (cart) => {
   return res.rows[0];
 };
 
+const deleteCartOrder = async (cart) => {
+  const { idAccount } = cart;
+  const query = `DELETE FROM "Cart" WHERE "idAccount" = $1 RETURNING *;`;
+  const res = await runQuery(query, [idAccount]);
+  return res.rows[0];
+};
+
 module.exports = {
   createCart,
   getCartByUserId,
   updateCart,
   deleteCart,
+  deleteCartOrder,
 };

@@ -1,16 +1,15 @@
 const express = require("express");
-const { getCheckout, getDetail } = require("../controllers/orderController");
+const {
+  getOrderByIdAccount,
+  getDetail,
+} = require("../controllers/orderController");
 
 const router = express.Router();
-
-router.get("/checkout/:idAccount", async (req, res) => {
+// Lich su mua cua user
+router.get("/order/:idAccount", async (req, res) => {
   try {
-    const checkout = await getCheckout(req.params.idAccount);
-    const details = await getDetail(req.params.idAccount);
-    res.status(200).json({
-      details,
-      checkout,
-    });
+    const order = await getOrderByIdAccount(req.params.idAccount);
+    res.status(200).json(order);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
