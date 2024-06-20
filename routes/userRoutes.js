@@ -1,9 +1,11 @@
 const express = require("express");
+const { authorize, authenticateJWT } = require("../middleware/auth");
+
 const { getUser, updateUser } = require("../controllers/userController");
 
 const router = express.Router();
 
-router.get("/user", async (req, res) => {
+router.get("/user", authenticateJWT, authorize(["A"]), async (req, res) => {
   try {
     const user = await getUser();
     res.status(200).json(user);
