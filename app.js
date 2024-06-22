@@ -28,17 +28,22 @@ app.use(cookieParser());
 
 app.use(bodyParser.json());
 // Yeu cau quyen, login test
-app.use("/api/auth/", authenticateJWT, authorize(["U", "A"]), checkoutRoutes);
+app.use(
+  "/api/auth/",
+  authenticateJWT,
+  authorize(["U", "A"]),
+  checkoutRoutes,
+  cartRoutes,
+  roleRoutes,
+  sizeRoutes
+);
 
 app.use(
   "/api",
   pizzaRoutes,
-  sizeRoutes,
   toppingRoutes,
-  roleRoutes,
   userRoutes,
   authRoutes,
-  cartRoutes,
   orderRoutes
 );
 

@@ -7,7 +7,7 @@ const createCart = async (cart) => {
   const res = await runQuery(query, [idAccount, idPiza, quantity, description]);
   return res.rows[0];
 };
-
+// Lay tat ca cac sp co trog cart
 const getCartByUserId = async (idAccount) => {
   const query = `SELECT "idCart", "imgPiza", "namePiza", "Price", "quantity", "description" FROM "Cart" 
                     JOIN "Piza" ON "Piza"."idPiza" = "Cart"."idPiza" 
@@ -23,14 +23,14 @@ const updateCart = async (cart) => {
   const res = await runQuery(query, [quantity, description, idCart]);
   return res.rows[0];
 };
-
+// Xoa sp
 const deleteCart = async (cart) => {
   const { idCart } = cart;
   const query = `DELETE FROM "Cart" WHERE "idCart" = $1 RETURNING *;`;
   const res = await runQuery(query, [idCart]);
   return res.rows[0];
 };
-
+// Tao order thanh cong xoa cart
 const deleteCartOrder = async (cart) => {
   const { idAccount } = cart;
   const query = `DELETE FROM "Cart" WHERE "idAccount" = $1 RETURNING *;`;
