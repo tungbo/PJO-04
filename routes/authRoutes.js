@@ -5,7 +5,7 @@ const { register } = require("../controllers/authController");
 const { getUserByUsername } = require("../controllers/userController");
 
 const router = express.Router();
-
+// Dang ky
 router.post("/register", async (req, res) => {
   const { UserName, Password, address, phone, Name } = req.body;
   try {
@@ -43,6 +43,7 @@ router.post("/register", async (req, res) => {
   }
 });
 
+//Dang nhap
 router.post("/login", async (req, res) => {
   const { UserName, Password } = req.body;
   try {
@@ -78,6 +79,15 @@ router.post("/login", async (req, res) => {
   } catch (error) {
     res.status(500).json({ message: "Server error" });
   }
+});
+// Dang xuat
+router.post("/logout", (req, res) => {
+  res.clearCookie("token", {
+    httpOnly: true,
+    secure: true,
+    sameSite: "Strict",
+  });
+  res.json({ message: "Logged out successfully" });
 });
 
 module.exports = router;

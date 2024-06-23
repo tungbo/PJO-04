@@ -1,7 +1,8 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
-const { auth, authorize } = require("./middleware/auth");
+const cookieParser = require("cookie-parser");
+const { authorize, authenticateJWT } = require("./middleware/auth");
 const pizzaRoutes = require("./routes/pizzaRoutes");
 const sizeRoutes = require("./routes/pizzaSizeRoutes");
 const toppingRoutes = require("./routes/toppingRoutes");
@@ -23,20 +24,26 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
+app.use(cookieParser());
 
 app.use(bodyParser.json());
 // Yeu cau quyen, login test
-app.use("/api/auth/", auth, authorize(["U", "A"]), checkoutRoutes);
+app.use(
+  "/api/auth/",
+  authenticateJWT,
+  authorize(["U", "A"]),
+  checkoutRoutes,
+  cartRoutes,
+  roleRoutes,
+  sizeRoutes
+);
 
 app.use(
   "/api",
   pizzaRoutes,
-  sizeRoutes,
   toppingRoutes,
-  roleRoutes,
   userRoutes,
   authRoutes,
-  cartRoutes,
   orderRoutes
 );
 

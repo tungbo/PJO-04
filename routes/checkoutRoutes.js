@@ -7,10 +7,11 @@ const {
 const { deleteCartOrder } = require("../controllers/cartController");
 
 const router = express.Router();
-// Lay thong tin user, cart
 router.get("/checkout/:idAccount", async (req, res) => {
   try {
+    // Lay thong tin cac sp trong cart
     const checkout = await getCheckout(req.params.idAccount);
+    // Lay thong tin user
     const details = await getDetail(req.params.idAccount);
     res.status(200).json({
       details,
@@ -25,11 +26,14 @@ router.post("/checkout/:idAccount", async (req, res) => {
   const { totalOrderPiza, orderDetail } = req.body;
   const { idAccount } = req.params;
   try {
+    //Tao order
     const order = await createOrder({ idAccount, totalOrderPiza });
 
     for (const details of orderDetail) {
+      //Tao order detail
       await createOrderDetail({ idOrderPiza: order.idOrderPiza, ...details });
     }
+    // Xoa cart
     await deleteCartOrder({ idAccount });
     res.status(201).json(order);
   } catch (err) {

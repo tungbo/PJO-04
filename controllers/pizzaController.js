@@ -15,7 +15,8 @@ const createPizza = async (pizza) => {
 };
 
 const getPizzas = async () => {
-  const query = `SELECT * FROM "Piza";`;
+  const query = `SELECT * FROM "Piza" 
+                JOIN "PizaSize" on "PizaSize"."idSize" = "Piza"."idSize";`;
   const res = await runQuery(query);
   return res.rows;
 };
