@@ -48,9 +48,10 @@ router.get("/pizzas", async (req, res) => {
   }
 });
 // Chi tiet sp
-router.get("/pizzas/:idPiza", async (req, res) => {
+router.get("/pizzas/detail", async (req, res) => {
   try {
-    const pizza = await getPizzaById(req.params.idPiza);
+    const { idPiza } = req.body;
+    const pizza = await getPizzaById(idPiza);
     res.status(200).json(pizza);
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -58,17 +59,18 @@ router.get("/pizzas/:idPiza", async (req, res) => {
 });
 // Cap nhat sp
 router.put(
-  "/pizzas/:idPiza",
+  "/pizzas",
   upload.single("imgPiza"),
   authenticateJWT,
   authorize(["A"]),
   async (req, res) => {
     try {
+      const { idPiza } = req.body;
       const pizza = {
         ...req.body,
         imgPiza: req.file ? req.file.path : undefined,
       };
-      const updatedPizza = await updatePizza(req.params.idPiza, pizza);
+      const updatedPizza = await updatePizza(idPiza, pizza);
       res.status(200).json(updatedPizza);
     } catch (err) {
       res.status(500).json({ error: err.message });
@@ -77,12 +79,13 @@ router.put(
 );
 
 router.delete(
-  "/pizzas/:idPiza",
+  "/pizzas",
   authenticateJWT,
   authorize(["A"]),
   async (req, res) => {
     try {
-      const pizza = await deletePizza(req.params.idPiza);
+      const { idPiza } = req.body;
+      const pizza = await deletePizza(idPiza);
       res.status(200).json(pizza);
     } catch (err) {
       res.status(500).json({ error: err.message });

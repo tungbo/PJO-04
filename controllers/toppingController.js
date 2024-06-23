@@ -19,8 +19,8 @@ const getToppingById = async (idTopping) => {
   return res.rows[0];
 };
 
-const updateTopping = async (idTopping, topping) => {
-  const { nameTopping, Price } = topping;
+const updateTopping = async (topping) => {
+  const { nameTopping, Price, idTopping } = topping;
 
   const query = `UPDATE "Toppings" SET "nameTopping" = $1, "Price" = $2 WHERE "idTopping" = $3 RETURNING *;`;
   const res = await runQuery(query, [nameTopping, Price, idTopping]);

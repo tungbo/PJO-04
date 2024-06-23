@@ -27,27 +27,29 @@ router.get("/size", async (req, res) => {
   }
 });
 
-router.get("/size/:idSize", async (req, res) => {
+router.get("/size/detail", async (req, res) => {
   try {
-    const size = await getSizeById(req.params.idSize);
+    const { idSize } = req.body;
+    const size = await getSizeById(idSize);
     res.status(200).json(size);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 });
 
-router.put("/size/:idSize", async (req, res) => {
+router.put("/size", async (req, res) => {
   try {
-    const size = await updateSize(req.params.idSize, req.body);
+    const size = await updateSize(req.body);
     res.status(200).json(size);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 });
 
-router.delete("/size/:idSize", async (req, res) => {
+router.delete("/size", async (req, res) => {
   try {
-    const size = await deleteSize(req.params.idSize);
+    const { idSize } = req.body;
+    const size = await deleteSize(idSize);
     res.status(200).json(size);
   } catch (err) {
     res.status(500).json({ error: err.message });

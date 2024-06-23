@@ -19,8 +19,8 @@ const getSizeById = async (idSize) => {
   return res.rows[0];
 };
 
-const updateSize = async (idSize, size) => {
-  const { NameSize, Price } = size;
+const updateSize = async (size) => {
+  const { idSize, NameSize, Price } = size;
 
   const query = `UPDATE "PizaSize" SET "NameSize" = $1, "Price" = $2 WHERE "idSize" = $3 RETURNING *;`;
   const res = await runQuery(query, [NameSize, Price, idSize]);

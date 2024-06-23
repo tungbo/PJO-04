@@ -17,9 +17,10 @@ router.post("/cart", async (req, res) => {
   }
 });
 // Tat ca cac sp co trong card
-router.get("/cart/:idAccount", async (req, res) => {
+router.get("/cart", async (req, res) => {
   try {
-    const cart = await getCartByUserId(req.params.idAccount);
+    const { idAccount } = req.body;
+    const cart = await getCartByUserId(idAccount);
     res.status(200).json(cart);
   } catch (err) {
     res.status(500).json({ error: err.message });
