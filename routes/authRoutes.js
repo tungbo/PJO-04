@@ -71,6 +71,8 @@ router.post("/login", async (req, res) => {
       httpOnly: true,
       secure: true,
       sameSite: "Strict",
+      path:"/",
+      maxAge: 3600000, // 1 hour
     });
     res.json({ message: "Logged in successfully" });
   } catch (error) {

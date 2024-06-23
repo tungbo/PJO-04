@@ -13,10 +13,10 @@ const checkoutRoutes = require("./routes/checkoutRoutes");
 const orderRoutes = require("./routes/orderRoutes");
 
 const app = express();
-const port = 3000;
+const port = 3001;
 
 const corsOptions = {
-  origin: "http://localhost", // frontend
+  origin: "http://localhost:3000", // frontend
   methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
   credentials: true, // cookie,HTTP Authentication
   optionsSuccessStatus: 204,
