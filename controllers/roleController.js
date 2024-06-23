@@ -19,8 +19,8 @@ const getRoleById = async (idRole) => {
   return res.rows[0];
 };
 
-const updateRole = async (idRole, role) => {
-  const { nameRole } = role;
+const updateRole = async (role) => {
+  const { nameRole, idRole } = role;
 
   const query = `UPDATE "RoleManager" SET "nameRole" = $1 WHERE "idRole" = $2 RETURNING *;`;
   const res = await runQuery(query, [nameRole, idRole]);

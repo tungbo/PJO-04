@@ -28,36 +28,33 @@ router.get("/topping", async (req, res) => {
   }
 });
 
-router.get("/topping/:idTopping", async (req, res) => {
+router.get("/topping/detail", async (req, res) => {
   try {
-    const topping = await getToppingById(req.params.idTopping);
+    const { idTopping } = req.body;
+    const topping = await getToppingById(idTopping);
     res.status(200).json(topping);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 });
 
-router.put(
-  "/topping/:idTopping",
-  authenticateJWT,
-  authorize(["A"]),
-  async (req, res) => {
-    try {
-      const topping = await updateTopping(req.params.idTopping, req.body);
-      res.status(200).json(topping);
-    } catch (err) {
-      res.status(500).json({ error: err.message });
-    }
+router.put("/topping", authenticateJWT, authorize(["A"]), async (req, res) => {
+  try {
+    const topping = await updateTopping(req.body);
+    res.status(200).json(topping);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
   }
-);
+});
 
 router.delete(
-  "/topping/:idTopping",
+  "/topping",
   authenticateJWT,
   authorize(["A"]),
   async (req, res) => {
     try {
-      const topping = await deleteTopping(req.params.idTopping);
+      const { idTopping } = req.body;
+      const topping = await deleteTopping(idTopping);
       res.status(200).json(topping);
     } catch (err) {
       res.status(500).json({ error: err.message });

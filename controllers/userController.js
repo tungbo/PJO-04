@@ -14,8 +14,8 @@ const getUserByUsername = async (UserName) => {
   return res.rows[0];
 };
 
-const updateUser = async (idAccount, user) => {
-  const { address, phone, Name, role } = user;
+const updateUser = async (user) => {
+  const { address, phone, Name, role, idAccount } = user;
 
   const query = `UPDATE "Account" SET "address" = $1, "phone" = $2, "Name" = $3, "role" = $4 WHERE "idAccount" = $5 RETURNING *;`;
   const res = await runQuery(query, [address, phone, Name, role, idAccount]);
