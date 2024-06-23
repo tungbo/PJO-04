@@ -87,6 +87,11 @@ router.post("/logout", (req, res) => {
     secure: true,
     sameSite: "Strict",
   });
+  res.clearCookie("KEYSCRFT", {
+    httpOnly: true,
+    secure: true,
+    sameSite: "Strict",
+  });
   res.json({ message: "Logged out successfully" });
 });
 
