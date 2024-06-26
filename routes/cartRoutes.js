@@ -9,13 +9,14 @@ const {
 const router = express.Router();
 // Them sp vao cart
 router.post("/cart", async (req, res) => {
+  console.log("day la body",req.body)
   try {
     const cart = await createCart(req.body);
-    res.status(201).json(cart);
+    res.status(201).json("da them san pham vao gio hang");
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
-});
+}); 
 // Tat ca cac sp co trong card
 router.get("/cart", async (req, res) => {
   try {
