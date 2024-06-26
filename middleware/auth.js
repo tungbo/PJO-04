@@ -34,18 +34,55 @@ const authorize = (roles) => {
 // Middleware xác thực JWT
 const authenticateJWT = (req, res, next) => {
   const token = req.cookies.token;
-
-  if (!token) {
-    return res.status(403).json({ message: "No token provided" });
-  }
+  const refreshToken = req.cookies.refeshToken;
+  // if (!token) {
+  //   return res.status(403).json({ message: "No token provided" });
+  // }
 
   try {
-    const decoded = jwt.verify(
+    // const decoded = jwt.verify(
+    //   token,
+    //   "ai-yeu-bac-ho-chi-minh-bang-cac-em-nhi-dong"
+    // );
+
+    jwt.verify(
       token,
-      "ai-yeu-bac-ho-chi-minh-bang-cac-em-nhi-dong"
+      "ai-yeu-bac-ho-chi-minh-bang-cac-em-nhi-dong",
+      async (err, user) => {
+        if (err && err.name === "TokenExpiredError") {
+          if (!refreshToken) {
+            return res.status(403).json({ message: "No token provided" }); // Khong co token
+          }
+          jwt.verify(
+            refreshToken,
+            "ai-yeu-bac-ho-chi-minh-bang-cac-em-nhi-dong",
+            (err, user) => {
+              if (err) {
+                return res
+                  .status(403)
+                  .json({ message: "RefreshToken khoong co" });
+              }
+              const newAccessToken = jwt.sign(
+                { idAccount: user.idAccount, role: user.role },
+                "ai-yeu-bac-ho-chi-minh-bang-cac-em-nhi-dong",
+                {
+                  expiresIn: "1h",
+                }
+              );
+              res.cookie("token", newAccessToken, {
+                httpOnly: true,
+                secure:true,
+                sameSite: "strict",
+              })
+              req.user = user
+            }
+          );
+        }
+        req.user = user;
+        next();
+      }
     );
-    req.user = decoded;
-    next();
+
   } catch (error) {
     return res.status(401).json({ message: "Invalid token" });
   }

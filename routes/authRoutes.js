@@ -59,16 +59,28 @@ router.post("/login", async (req, res) => {
     if (!isMatch) {
       return res.status(400).json({ message: "Invalid credentials" });
     }
-
     // Generate JWT token
     const token = jwt.sign(
-      { id: user.idAccount, role: user.role },
+      { idAccount: user.idAccount, role: user.role },
       "ai-yeu-bac-ho-chi-minh-bang-cac-em-nhi-dong",
       {
         expiresIn: "1h",
       }
     );
-
+    const Refeshtoken = jwt.sign(
+      { idAccount: user.idAccount, role: user.role },
+      "ai-yeu-bac-ho-chi-minh-bang-cac-em-nhi-dong",
+      {
+        expiresIn: "1h",
+      }
+    );
+    res.cookie("refeshToken", Refeshtoken, {
+      httpOnly: true,
+      secure: true,
+      sameSite: "Strict",
+      path:"/",
+      maxAge: 86400000, // 1 day
+    });
     res.cookie("token", token, {
       httpOnly: true,
       secure: true,
@@ -90,6 +102,11 @@ router.post("/logout", (req, res) => {
     sameSite: "Strict",
   });
   res.clearCookie("KEYSCRFT", {
+    httpOnly: true,
+    secure: true,
+    sameSite: "Strict",
+  });
+  res.clearCookie("refeshToken", {
     httpOnly: true,
     secure: true,
     sameSite: "Strict",
