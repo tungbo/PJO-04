@@ -23,7 +23,7 @@ const cookieParser = require("cookie-parser");
 // };
 const authorize = (roles) => {
   return (req, res, next) => {
-    if (!roles.includes(req.user.role)) {
+    if (!req.user || !roles.includes(req.user.role)) {
       return res
         .status(403)
         .json({ message: "Access forbidden: insufficient permissions" });
@@ -34,12 +34,12 @@ const authorize = (roles) => {
 // Middleware xác thực JWT
 const authenticateJWT = (req, res, next) => {
   const token = req.cookies.token;
-  const refreshToken = req.cookies.refeshToken;
-  // if (!token) {
+  const RefreshToken = req.cookies.refeshToken;
+   // if (!token) {
   //   return res.status(403).json({ message: "No token provided" });
   // }
 
-  try {
+ 
     // const decoded = jwt.verify(
     //   token,
     //   "ai-yeu-bac-ho-chi-minh-bang-cac-em-nhi-dong"
@@ -49,43 +49,48 @@ const authenticateJWT = (req, res, next) => {
       token,
       "ai-yeu-bac-ho-chi-minh-bang-cac-em-nhi-dong",
       async (err, user) => {
-        if (err && err.name === "TokenExpiredError") {
-          if (!refreshToken) {
+        if (err) {
+          if (!RefreshToken) {
             return res.status(403).json({ message: "No token provided" }); // Khong co token
           }
-          jwt.verify(
-            refreshToken,
-            "ai-yeu-bac-ho-chi-minh-bang-cac-em-nhi-dong",
-            (err, user) => {
-              if (err) {
-                return res
-                  .status(403)
-                  .json({ message: "RefreshToken khoong co" });
-              }
-              const newAccessToken = jwt.sign(
-                { idAccount: user.idAccount, role: user.role },
-                "ai-yeu-bac-ho-chi-minh-bang-cac-em-nhi-dong",
-                {
-                  expiresIn: "1h",
+          try {
+            jwt.verify(
+              RefreshToken,
+              "ai-yeu-bac-ho-chi-minh-bang-cac-em-nhi-dong",
+              (err, user) => {
+                if (err) {
+                  return res
+                    .status(403)
+                    .json({ message: "RefreshToken khoong co" });
                 }
-              );
-              res.cookie("token", newAccessToken, {
-                httpOnly: true,
-                secure:true,
-                sameSite: "strict",
-              })
-              req.user = user
-            }
-          );
+                const newAccessToken = jwt.sign(
+                  { idAccount: user.idAccount, role: user.role },
+                  "ai-yeu-bac-ho-chi-minh-bang-cac-em-nhi-dong",
+                  {
+                    expiresIn: "1h",
+                  }
+                );
+                res.cookie("token", newAccessToken, {
+                  httpOnly: true,
+                  secure:true,
+                  sameSite: "strict",
+                  maxAge:3600000
+                })
+                req.user = { idAccount: user.idAccount, role: user.role };
+                next();
+              }
+            );
+          } catch (error) {
+            return res.status(500); // Lỗi máy chủ
+          }
+        }else{
+          req.user = user;
+          next();
         }
-        req.user = user;
-        next();
+       
       }
     );
 
-  } catch (error) {
-    return res.status(401).json({ message: "Invalid token" });
-  }
 };
 
 module.exports = {
