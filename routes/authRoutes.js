@@ -71,7 +71,7 @@ router.post("/login", async (req, res) => {
       { idAccount: user.idAccount, role: user.role },
       "ai-yeu-bac-ho-chi-minh-bang-cac-em-nhi-dong",
       {
-        expiresIn: "1h",
+        expiresIn: "24h",
       }
     );
     res.cookie("refeshToken", Refeshtoken, {
@@ -86,7 +86,7 @@ router.post("/login", async (req, res) => {
       secure: true,
       sameSite: "Strict",
       path:"/",
-      maxAge: 3600000, // 1 hour
+      maxAge: 3600, // 1 hour
     });
 
     res.json({ message: "Logged in successfully",Info : userInfo });
