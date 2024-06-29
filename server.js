@@ -5,7 +5,7 @@ const pool = new Pool({
   database: "pizzaDb",
   port: 5432,
   user: "postgres",
-  password: "riven11A",
+  password: "admin123",
 });
 const checkConnection = async () => {
   try {

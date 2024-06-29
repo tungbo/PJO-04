@@ -5,6 +5,9 @@ const {
   createOrderDetail,
 } = require("../controllers/orderController");
 const { deleteCartOrder } = require("../controllers/cartController");
+const stripe = require("stripe")(
+  "sk_test_51PVws3EpMDtYacyevhIFxzEw7bezUma5JsqhPI04iSES4IqC5qbx8ENRvVjupRelPxseslvkVuCDka4eVFHqr9Br00TtebVlqm"
+);
 
 const router = express.Router();
 router.get("/checkout", async (req, res) => {
@@ -22,6 +25,7 @@ router.get("/checkout", async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 });
+
 // Xoa cart, tao order
 router.post("/checkout", async (req, res) => {
   const { idAccount } = req.body;
@@ -40,6 +44,31 @@ router.post("/checkout", async (req, res) => {
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
+});
+
+// Xoa cart, tao order
+router.post("/checkout/stripe", async (req, res) => {
+  const { orderDetail } = req.body;
+  const session = await stripe.checkout.sessions.create({
+    line_items: [
+      {
+        price_data: {
+          currency: "usd",
+          product_data: {
+            name: orderDetail.name,
+          },
+          unit_amount: orderDetail.price * 100,
+        },
+        quantity: orderDetail.quantity,
+      },
+    ],
+    mode: "payment",
+    success_url: "http://localhost:3000/success",
+    cancel_url: "http://localhost:3000/cancel",
+  });
+  res.status(200).json({
+    paymentUrl: session.url,
+  });
 });
 
 module.exports = router;

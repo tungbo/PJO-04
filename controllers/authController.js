@@ -20,17 +20,17 @@ register = async (user) => {
 };
 
 login = async (user) => {
-  const {UserName} = user;
+  const { UserName } = user;
   const query = `Select "idAccount","UserName","address","phone","Name","role" FROM "Account" WHERE "UserName" = $1;`;
- try {
-  const res = await runQuery(query,[UserName]);
-  console.log(res.rows[0])
-  return res.rows[0]
- } catch (error) {
-   console.log(error)
- }
-}
+  try {
+    const res = await runQuery(query, [UserName]);
+    console.log(res.rows[0]);
+    return res.rows[0];
+  } catch (error) {
+    console.log(error);
+  }
+};
 module.exports = {
   register,
-  login
+  login,
 };
