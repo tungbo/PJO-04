@@ -58,6 +58,27 @@ router.get("/pizzas/detail", async (req, res) => {
   }
 });
 // Cap nhat sp
+// router.put(
+//   "/pizzas",
+//   upload.single("imgPiza"),
+//   authenticateJWT,
+//   authorize(["A"]),
+//   async (req, res) => {
+//     console.log(res);
+//     try {
+//       const { idPiza } = req.body;
+//       const pizza = {
+//         ...req.body,
+//         imgPiza: req.file ? req.file.path : undefined,
+//       };
+//       const updatedPizza = await updatePizza(idPiza, pizza);
+//       res.status(200).json(updatedPizza);
+//     } catch (err) {
+//       res.status(500).json({ error: err.message });
+//     }
+//   }
+// );
+
 router.put(
   "/pizzas",
   upload.single("imgPiza"),
@@ -66,10 +87,13 @@ router.put(
   async (req, res) => {
     try {
       const { idPiza } = req.body;
+      const existingPizza = await getPizzaById(idPiza);
+
       const pizza = {
         ...req.body,
-        imgPiza: req.file ? req.file.path : undefined,
+        imgPiza: req.file ? req.file.path : existingPizza.imgPiza,
       };
+
       const updatedPizza = await updatePizza(idPiza, pizza);
       res.status(200).json(updatedPizza);
     } catch (err) {
@@ -77,7 +101,6 @@ router.put(
     }
   }
 );
-
 router.delete(
   "/pizzas",
   authenticateJWT,

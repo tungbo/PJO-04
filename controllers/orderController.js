@@ -28,9 +28,15 @@ const getOrderByIdAccount = async (idAccount) => {
   const res = await runQuery(query, [idAccount]);
   return res.rows;
 };
-
+const getOrder = async () => {
+  const query = `SELECT * FROM "OrderPiza"
+                JOIN "Account" ON "Account"."idAccount" = "OrderPiza"."idAccount"`;
+  const res = await runQuery(query);
+  return res.rows;
+};
 module.exports = {
   createOrder,
   createOrderDetail,
   getOrderByIdAccount,
+  getOrder,
 };

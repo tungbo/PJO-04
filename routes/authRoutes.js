@@ -1,7 +1,7 @@
 const express = require("express");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const { register,login } = require("../controllers/authController");
+const { register, login } = require("../controllers/authController");
 const { getUserByUsername } = require("../controllers/userController");
 
 const router = express.Router();
@@ -48,7 +48,7 @@ router.post("/login", async (req, res) => {
   const { UserName, Password } = req.body;
   try {
     // Find the user by username
-    const userInfo = await login({UserName,Password})
+    const userInfo = await login({ UserName, Password });
     const user = await getUserByUsername(UserName);
     if (!user) {
       return res.status(400).json({ message: "Invalid credentials" });
@@ -78,18 +78,18 @@ router.post("/login", async (req, res) => {
       httpOnly: true,
       secure: true,
       sameSite: "Strict",
-      path:"/",
+      path: "/",
       maxAge: 86400000, // 1 day
     });
     res.cookie("token", token, {
       httpOnly: true,
       secure: true,
       sameSite: "Strict",
-      path:"/",
+      path: "/",
       maxAge: 3600, // 1 hour
     });
 
-    res.json({ message: "Logged in successfully",Info : userInfo });
+    res.json({ message: "Logged in successfully", Info: userInfo });
   } catch (error) {
     res.status(500).json({ message: error });
   }

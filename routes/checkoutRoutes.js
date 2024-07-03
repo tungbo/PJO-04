@@ -46,29 +46,4 @@ router.post("/checkout", async (req, res) => {
   }
 });
 
-// Xoa cart, tao order
-router.post("/checkout/stripe", async (req, res) => {
-  const { orderDetail } = req.body;
-  const session = await stripe.checkout.sessions.create({
-    line_items: [
-      {
-        price_data: {
-          currency: "usd",
-          product_data: {
-            name: orderDetail.name,
-          },
-          unit_amount: orderDetail.price * 100,
-        },
-        quantity: orderDetail.quantity,
-      },
-    ],
-    mode: "payment",
-    success_url: "http://localhost:3000/success",
-    cancel_url: "http://localhost:3000/cancel",
-  });
-  res.status(200).json({
-    paymentUrl: session.url,
-  });
-});
-
 module.exports = router;

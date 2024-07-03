@@ -32,7 +32,7 @@ const updatePizza = async (idPiza, pizza) => {
   // Lấy thông tin pizza
   const currentAccount = await getPizzaById(idPiza);
   // Nếu có ảnh mới xóa ảnh cũ
-  if (imgPiza && currentAccount.imgPiza) {
+  if (imgPiza != currentAccount.imgPiza) {
     deleteImageFile(currentAccount.imgPiza);
   }
 

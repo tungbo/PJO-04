@@ -9,7 +9,7 @@ const createCart = async (cart) => {
 };
 // Lay tat ca cac sp co trog cart
 const getCartByUserId = async (idAccount) => {
-  const query = `SELECT "idCart", "imgPiza", "namePiza", "Price", "quantity", "description" FROM "Cart" 
+  const query = `SELECT "idCart", "Piza"."idPiza", "imgPiza", "namePiza", "Price", "quantity", "description" FROM "Cart" 
                     JOIN "Piza" ON "Piza"."idPiza" = "Cart"."idPiza" 
                     JOIN "PizaSize" ON "Piza"."idSize" = "PizaSize"."idSize" 
                     WHERE "idAccount" = $1;`;

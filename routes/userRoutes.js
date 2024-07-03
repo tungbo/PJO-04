@@ -18,7 +18,7 @@ router.get("/user", authenticateJWT, authorize(["A"]), async (req, res) => {
   }
 });
 
-router.get(
+router.post(
   "/user/detail",
   authenticateJWT,
   authorize(["A", "U"]),

@@ -1,7 +1,7 @@
 const express = require("express");
 const {
   getOrderByIdAccount,
-  getDetail,
+  getOrder,
 } = require("../controllers/orderController");
 
 const router = express.Router();
@@ -14,5 +14,12 @@ router.get("/order/:idAccount", async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 });
-
+router.get("/order", async (req, res) => {
+  try {
+    const orders = await getOrder();
+    res.status(200).json(orders);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
 module.exports = router;

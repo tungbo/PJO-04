@@ -16,16 +16,17 @@ const authRoutes = require("./routes/authRoutes");
 const cartRoutes = require("./routes/cartRoutes");
 const checkoutRoutes = require("./routes/checkoutRoutes");
 const orderRoutes = require("./routes/orderRoutes");
+const path = require("path");
 
 const app = express();
 const port = 3001;
-
 const corsOptions = {
   origin: "http://localhost:3000", // frontend
   methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
   credentials: true, // cookie,HTTP Authentication
   optionsSuccessStatus: 204,
 };
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 app.use(morgan("dev"));
 app.use(cors(corsOptions));
 app.use(cookieParser());
@@ -37,8 +38,7 @@ app.use(
   authorize(["U", "A"]),
   checkoutRoutes,
   cartRoutes,
-  roleRoutes,
-  sizeRoutes
+  roleRoutes
 );
 
 app.use(
@@ -47,7 +47,8 @@ app.use(
   toppingRoutes,
   userRoutes,
   authRoutes,
-  orderRoutes
+  orderRoutes,
+  sizeRoutes
 );
 
 app.post("/test", async (req, res) => {
