@@ -17,12 +17,25 @@ const getCartByUserId = async (idAccount) => {
   return res.rows;
 };
 
-const updateCart = async (cart) => {
-  const { quantity, description, idCart } = cart;
-  const query = `UPDATE "Cart" SET "quantity" = $1, "description" = $2 WHERE "idCart" = $3 RETURNING *;`;
-  const res = await runQuery(query, [quantity, description, idCart]);
+const updateInCart = async (cart) => {
+  const { quantity, description, idCart, idPiza } = cart;
+  const query = `UPDATE "Cart" SET "quantity" = $1, "description" = $2 WHERE "idCart" = $3 AND "idPiza" = $4 RETURNING *;`;
+  const res = await runQuery(query, [quantity, description, idCart, idPiza]);
   return res.rows[0];
 };
+
+const updateCart = async (quantity, idAccount, idPiza) => {
+  const query = `UPDATE "Cart" SET "quantity" = "quantity" + $1 WHERE "idAccount" = $2 AND "idPiza" = $3 RETURNING *;`;
+  const res = await runQuery(query, [quantity, idAccount, idPiza]);
+  return res.rows[0];
+};
+
+const checkCart = async (idAccount, idPiza) => {
+  const query = `SELECT * FROM "Cart" WHERE "idAccount" = $1 AND "idPiza" = $2;`;
+  const res = await runQuery(query, [idAccount, idPiza]);
+  return res.rows.length > 0;
+};
+
 // Xoa sp
 const deleteCart = async (cart) => {
   const { idCart } = cart;
@@ -44,4 +57,6 @@ module.exports = {
   updateCart,
   deleteCart,
   deleteCartOrder,
+  checkCart,
+  updateInCart,
 };

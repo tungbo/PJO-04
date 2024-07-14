@@ -6,9 +6,12 @@ const {
 
 const router = express.Router();
 // Lich su mua cua user
-router.get("/order/:idAccount", async (req, res) => {
+router.get("/order/:idAccount/:idOrderPiza", async (req, res) => {
   try {
-    const order = await getOrderByIdAccount(req.params.idAccount);
+    const order = await getOrderByIdAccount(
+      req.params.idAccount,
+      req.params.idOrderPiza
+    );
     res.status(200).json(order);
   } catch (err) {
     res.status(500).json({ error: err.message });

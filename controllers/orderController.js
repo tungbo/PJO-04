@@ -20,12 +20,12 @@ const createOrderDetail = async (orderDetail) => {
 };
 
 //Lich su order cua nguoi dung
-const getOrderByIdAccount = async (idAccount) => {
+const getOrderByIdAccount = async (idAccount, idOrderPiza) => {
   const query = `SELECT "orderDate", "namePiza", "quantity", "DesTopping", "totalOrderPiza", "idAccount" FROM "OrderDetail"
                 JOIN "OrderPiza" ON "OrderPiza"."idOrderPiza" = "OrderDetail"."idOrderPiza"
 	              JOIN "Piza" ON "Piza"."idPiza" = "OrderDetail"."idPiza"
-	              WHERE "idAccount" = $1`;
-  const res = await runQuery(query, [idAccount]);
+	              WHERE "idAccount" = $1 AND "OrderDetail"."idOrderPiza" = $2`;
+  const res = await runQuery(query, [idAccount, idOrderPiza]);
   return res.rows;
 };
 const getOrder = async () => {
